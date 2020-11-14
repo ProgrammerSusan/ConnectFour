@@ -37,3 +37,98 @@ if __name__ == "__main__":
       sock.sendall(response)
   finally:
     sock.close()
+
+def getBestMove(player, board):
+    var rowIndex = 6
+    var colIndex = 0
+    for row in board[::-1]:
+        rowIndex -= 1
+        for col in row:
+            if col == player:
+            col += 1
+    return
+
+def searchRight(player, board, rowIndex, colIndex):
+    var score = 0
+    for col in board[rowIndex]:
+        if col == player:
+            score += 1
+        else:
+            if board[rowIndex][colIndex + score] == 0:
+                return [score, colIndex + score]
+            if board[rowIndex][colIndex + score] != player:
+                return [score, -1]
+
+def searchUp(player, board, rowIndex, colIndex):
+    var score = 1
+    var i = 1
+    while i < 4:
+        if board[rowIndex - i][colIndex] == player:
+                score += 1
+                i += 1
+            else:
+                i = 5
+                if board[rowIndex - score][colIndex] == 0:
+                    return [score, colIndex]
+                if board[rowIndex - score][colIndex] != player:
+                    return [score, -1]
+
+def searchDiagRightUp(player, board, rowIndex, colIndex):
+    ## Subtract Rows and add Col
+    var score = 1
+    var i = 1
+    while i < 4:
+        if board[rowIndex - i][colIndex + i] == player:
+                score += 1
+                i += 1
+            else:
+                i = 5
+                if board[rowIndex - score][colIndex + score] == 0:
+                    return [score, colIndex]
+                if board[rowIndex - score][colIndex + score] != player:
+                    return [score, -1]
+
+def searchDiagRightDown(player, board, rowIndex, colIndex):
+    ## Add Rows and add Col
+    var score = 1
+    var i = 1
+    while i < 4:
+        if board[rowIndex + i][colIndex + i] == player:
+                score += 1
+                i += 1
+            else:
+                i = 5
+                if board[rowIndex + score][colIndex + score] == 0:
+                    return [score, colIndex]
+                if board[rowIndex + score][colIndex + score] != player:
+                    return [score, -1]
+
+def searchDiagLeftUp(player, board, rowIndex, colIndex):
+    ## Subtract Rows and subtract Col
+    var score = 1
+    var i = 1
+    while i < 4:
+        if board[rowIndex - i][colIndex - i] == player:
+                score += 1
+                i += 1
+            else:
+                i = 5
+                if board[rowIndex - score][colIndex - score] == 0:
+                    return [score, colIndex]
+                if board[rowIndex - score][colIndex - score] != player:
+                    return [score, -1]
+
+def searchDiagLeftDown(player, board, rowIndex, colIndex):
+    ## Add Rows and add Col
+    var score = 1
+    var i = 1
+    while i < 4:
+        if board[rowIndex - i][colIndex - i] == player:
+                score += 1
+                i += 1
+            else:
+                i = 5
+                if board[rowIndex - score][colIndex - score] == 0:
+                    return [score, colIndex]
+                if board[rowIndex - score][colIndex - score] != player:
+                    return [score, -1]
