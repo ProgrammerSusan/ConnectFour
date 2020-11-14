@@ -4,15 +4,23 @@ import sys
 import json
 import socket
 
+
 def get_move(player, board):
-  # TODO determine valid moves
-  # TODO determine best move
-  return {"column": 1}
+    # TODO determine valid moves
+    # TODO determine best move
+    return {"column": 1}
+
+
+def validMove(column, board):
+    if board[0][column] != 0:
+        return 0
+
 
 def prepare_response(move):
-  response = '{}\n'.format(json.dumps(move))
-  print('sending {!r}'.format(response))
-  return response
+    response = '{}\n'.format(json.dumps(move))
+    print('sending {!r}'.format(response))
+    return response
+
 
 if __name__ == "__main__":
   port = int(sys.argv[1]) if (len(sys.argv) > 1 and sys.argv[1]) else 1337
