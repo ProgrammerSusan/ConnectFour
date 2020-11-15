@@ -21,8 +21,8 @@ def validMove(column, board):
 def getMoves(player, board):
     moves = []
     for col in range(0, len(board[0])):
-        for row in range(0, 6):
-            if board[row][col] == 0 and (row < 5 and board[row + 1][col] != 0):
+        for row in range(0, 5):
+            if board[row][col] == 0 and board[row + 1][col] != 0:
                 moves.append(searchDiagRightUp(player, board, row, col))
                 moves.append(searchRight(player, board, row, col))
                 moves.append(searchLeft(player, board, row, col))
@@ -30,6 +30,13 @@ def getMoves(player, board):
                 moves.append(searchDown(player, board, row, col))
                 moves.append(searchDiagLeftUp(player, board, row, col))
                 moves.append(searchDiagLeftDown(player, board, row, col))
+        moves.append(searchDiagRightUp(player, board, 5, col))
+        moves.append(searchRight(player, board, 5, col))
+        moves.append(searchLeft(player, board, 5, col))
+        moves.append(searchDiagRightDown(player, board, 5, col))
+        moves.append(searchDown(player, board, 5, col))
+        moves.append(searchDiagLeftUp(player, board, 5, col))
+        moves.append(searchDiagLeftDown(player, board, 5, col))
     return getBestMove(moves)
 
 
