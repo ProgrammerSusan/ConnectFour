@@ -19,40 +19,17 @@ def validMove(column, board):
 
 
 def getMoves(player, board):
-    rowIndex = 5
-    colIndex = 0
-    print(player)
     moves = []
-    for row in board[::-1]:
-        rowIndex -= 1
-        for col in row:
-            if col == player:
-                if colIndex < 4 and rowIndex > 1:
-                    print("ru")
-                    moves.append(searchDiagRightUp(
-                        player, board, rowIndex, colIndex))
-                if colIndex < 4:
-                    print("r")
-                    moves.append(searchRight(
-                        player, board, rowIndex, colIndex))
-                if colIndex <= 3 and rowIndex < 3:
-                    print("rd")
-                    moves.append(searchDiagRightDown(
-                        player, board, rowIndex, colIndex))
-                if rowIndex > 1:
-                    print("u")
-                    moves.append(searchUp(
-                        player, board, rowIndex, colIndex))
-                if colIndex > 2:
-                    print("lu")
-                    moves.append(searchDiagLeftUp(
-                        player, board, rowIndex, colIndex))
-                if colIndex > 2 and rowIndex < 3:
-                    print("ld")
-                    moves.append(searchDiagLeftDown(
-                        player, board, rowIndex, colIndex))
-        if len(moves) == 0:
-            return [0, 3]
+    for col in range(0, len(board[0])):
+        for row in range(0, 6):
+            if board[row][col] == 0 and (row < 5 and board[row + 1][col] != 0):
+                moves.append(searchDiagRightUp(player, board, row, col))
+                moves.append(searchRight(player, board, row, col))
+                moves.append(searchLeft(player, board, row, col))
+                moves.append(searchDiagRightDown(player, board, row, col))
+                moves.append(searchDown(player, board, row, col))
+                moves.append(searchDiagLeftUp(player, board, row, col))
+                moves.append(searchDiagLeftDown(player, board, row, col))
     return getBestMove(moves)
 
 
@@ -67,96 +44,90 @@ def getBestMove(moves):
 
 
 def searchRight(player, board, rowIndex, colIndex):
-    score = 0
-    for col in board[rowIndex]:
-        if col == player:
-            score += 1
-        else:
-            if board[rowIndex][colIndex + score] == 0:
-                return [score, colIndex + score]
-            if board[rowIndex][colIndex + score] != player:
-                return [score, -1]
-
-
-def searchUp(player, board, rowIndex, colIndex):
     score = 1
     i = 1
-    while i < 4:
-        if board[rowIndex - i][colIndex] == player:
+    while i < 4 and (colIndex + i < 7):
+        if board[rowIndex][colIndex + i] == player:
             score += 1
             i += 1
         else:
-            i = 5
-            if board[rowIndex - score][colIndex] == 0:
-                return [score, colIndex]
-            if board[rowIndex - score][colIndex] != player:
-                return [score, -1]
+            return [score, colIndex]
+    return [score, colIndex]
+
+def searchLeft(player, board, rowIndex, colIndex):
+    score = 1
+    i = 1
+    while i < 4 and (colIndex - i >= 0):
+        if board[rowIndex][colIndex - i] == player:
+            score += 1
+            i += 1
+        else:
+            return [score, colIndex]
+    return [score, colIndex]
+
+
+def searchDown(player, board, rowIndex, colIndex):
+    score = 1
+    i = 1
+    while i < 4 and (rowIndex + i < 6):
+        if board[rowIndex + i][colIndex] == player:
+            score += 1
+            i += 1
+        else:
+            return [score, colIndex]
+    return [score, colIndex]
 
 
 def searchDiagRightUp(player, board, rowIndex, colIndex):
     # Subtract Rows and add Col
     score = 1
     i = 1
-    while i < 4:
-        print("score")
-        print(score)
+    while i < 4 and (rowIndex - i >= 0 and colIndex + i < 7):
         if board[rowIndex - i][colIndex + i] == player:
             score += 1
             i += 1
         else:
-            i = 5
-            if board[rowIndex - score][colIndex + score] == 0:
-                return [score, colIndex]
-            if board[rowIndex - score][colIndex + score] != player:
-                return [score, -1]
+            return [score, colIndex]
+    return [score, colIndex]
 
 
 def searchDiagRightDown(player, board, rowIndex, colIndex):
     # Add Rows and add Col
     score = 1
     i = 1
-    while i < 4:
+    while i < 4 and (rowIndex + i < 6 and colIndex + i < 7):
         if board[rowIndex + i][colIndex + i] == player:
             score += 1
             i += 1
         else:
-            i = 5
-            if board[rowIndex + score][colIndex + score] == 0:
-                return [score, colIndex]
-            if board[rowIndex + score][colIndex + score] != player:
-                return [score, -1]
+            return [score, colIndex]
+    return [score, colIndex]
 
 
 def searchDiagLeftUp(player, board, rowIndex, colIndex):
     # Subtract Rows and subtract Col
     score = 1
     i = 1
-    while i < 4:
+    while i < 4 and (rowIndex - i >= 0 and colIndex - i >= 0):
         if board[rowIndex - i][colIndex - i] == player:
             score += 1
             i += 1
         else:
-            i = 5
-            if board[rowIndex - score][colIndex - score] == 0:
-                return [score, colIndex]
-            if board[rowIndex - score][colIndex - score] != player:
-                return [score, -1]
+            return [score, colIndex]
+    return [score, colIndex]
 
 
 def searchDiagLeftDown(player, board, rowIndex, colIndex):
     # Add Rows and add Col
     score = 1
     i = 1
-    while i < 4:
-        if board[rowIndex - i][colIndex - i] == player:
+    while i < 4 and (rowIndex + i < 6 and colIndex - i >= 0):
+        if board[rowIndex + i][colIndex - i] == player:
             score += 1
             i += 1
         else:
-            i = 5
-            if board[rowIndex - score][colIndex - score] == 0:
-                return [score, colIndex]
-            if board[rowIndex - score][colIndex - score] != player:
-                return [score, -1]
+            return [score, colIndex]
+    return [score, colIndex]
 
 
 def nextStateBoard(player, board, col, isMax):
@@ -177,32 +148,33 @@ def nextStateBoard(player, board, col, isMax):
 def minMax(player, board, depth, isMax):
     if depth == 0:
         print(getMoves(player, board))
+        print("depth", depth)
         return getMoves(player, board)
     if isMax:
         maxValue = [0, 3]
 
-        i = 0  # do we need to incerment??  SHould we use a for loop?
-        while i < 6:
+        for i in range(0,7):
             print("in the max loop")
             print(i)
+            print("depth max ", depth)
             newBoard = nextStateBoard(player, board, i, isMax)
             value = minMax(
-                player, newBoard, depth - 1, False)
+                player, newBoard, depth, False)
             # still not conviced that this is an array
             if maxValue[0] < value[0]:
                 maxValue = value
-            i += 1
         return maxValue
     else:
         minValue = [5, 3]
-        i = 0
-        while i < 6:
+        for i in range(0, 7):
+            print("depthmin ", depth)
             newBoard = nextStateBoard(player, board, i, isMax)
             value = minMax(
                 player, newBoard, depth - 1, True)
+            # print("minValue ", minValue)
+            # print("value ", value)
             if minValue[0] > value[0]:
                 minValue = value
-            i += 1
         return minValue
 
 
