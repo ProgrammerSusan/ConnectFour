@@ -61,11 +61,14 @@ def getBestMove(moves):
 
 def searchRight(player, board, rowIndex, colIndex):
     score = 1
+    enemyScore = 0
     i = 1
     while i < 4 and (colIndex + i < 7):
         if board[rowIndex][colIndex + i] == player:
             score += 1
             i += 1
+        if board[rowIndex][colIndex + i] != 0:
+            enemyScore += 1
         else:
             return [scoreMove(score, colIndex), colIndex]
     return [scoreMove(score, colIndex), colIndex]
@@ -73,11 +76,14 @@ def searchRight(player, board, rowIndex, colIndex):
 
 def searchLeft(player, board, rowIndex, colIndex):
     score = 1
+    enemyScore = 0
     i = 1
     while i < 4 and (colIndex - i >= 0):
         if board[rowIndex][colIndex - i] == player:
             score += 1
             i += 1
+        if board[rowIndex][colIndex - i] != 0:
+            enemyScore += 1
         else:
             return [scoreMove(score, colIndex), colIndex]
     return [scoreMove(score, colIndex), colIndex]
@@ -85,11 +91,14 @@ def searchLeft(player, board, rowIndex, colIndex):
 
 def searchDown(player, board, rowIndex, colIndex):
     score = 1
+    enemyScore = 0
     i = 1
     while i < 4 and (rowIndex + i < 6):
         if board[rowIndex + i][colIndex] == player:
             score += 1
             i += 1
+        if board[rowIndex + i][colIndex] != 0:
+            enemyScore += 1
         else:
             return [scoreMove(score, colIndex), colIndex]
     return [scoreMove(score, colIndex), colIndex]
@@ -97,11 +106,14 @@ def searchDown(player, board, rowIndex, colIndex):
 
 def searchDiagRightUp(player, board, rowIndex, colIndex):
     score = 1
+    enemyScore = 0
     i = 1
     while i < 4 and (rowIndex - i >= 0 and colIndex + i < 7):
         if board[rowIndex - i][colIndex + i] == player:
             score += 1
             i += 1
+        if board[rowIndex - i][colIndex + i] != 0:
+            enemyScore += 1
         else:
             return [scoreMove(score, colIndex), colIndex]
     return [scoreMove(score, colIndex), colIndex]
@@ -109,11 +121,14 @@ def searchDiagRightUp(player, board, rowIndex, colIndex):
 
 def searchDiagRightDown(player, board, rowIndex, colIndex):
     score = 1
+    enemyScore = 0
     i = 1
     while i < 4 and (rowIndex + i < 6 and colIndex + i < 7):
         if board[rowIndex + i][colIndex + i] == player:
             score += 1
             i += 1
+        if board[rowIndex + i][colIndex + i] != 0:
+            enemyScore += 1
         else:
             return [scoreMove(score, colIndex), colIndex]
     return [scoreMove(score, colIndex), colIndex]
@@ -121,11 +136,14 @@ def searchDiagRightDown(player, board, rowIndex, colIndex):
 
 def searchDiagLeftUp(player, board, rowIndex, colIndex):
     score = 1
+    enemyScore = 0
     i = 1
     while i < 4 and (rowIndex - i >= 0 and colIndex - i >= 0):
         if board[rowIndex - i][colIndex - i] == player:
             score += 1
             i += 1
+        if board[rowIndex - i][colIndex - i] != 0:
+            enemyScore += 1
         else:
             return [scoreMove(score, colIndex), colIndex]
     return [scoreMove(score, colIndex), colIndex]
@@ -133,17 +151,20 @@ def searchDiagLeftUp(player, board, rowIndex, colIndex):
 
 def searchDiagLeftDown(player, board, rowIndex, colIndex):
     score = 1
+    enemyScore = 0
     i = 1
     while i < 4 and (rowIndex + i < 6 and colIndex - i >= 0):
         if board[rowIndex + i][colIndex - i] == player:
             score += 1
             i += 1
+        if board[rowIndex + i][colIndex - i] != 0:
+            enemyScore += 1
         else:
             return [scoreMove(score, colIndex), colIndex]
     return [scoreMove(score, colIndex), colIndex]
 
 
-def scoreMove(score, colIndex):
+def scoreMove(score, enemyScore, colIndex):
     if score == 3:
         score *= 100
     if score == 2:
@@ -154,6 +175,8 @@ def scoreMove(score, colIndex):
         score *= 3
     if colIndex == 1 or colIndex == 5:
         score *= 2
+    if enemyScore == 3:
+        score *= 75
     return score
 
 
@@ -165,7 +188,6 @@ def nextStateBoard(player, board, col, isMax):
             chip = 2
         else:
             chip = 1
-    print(chip)
 
     board = copy.deepcopy(board)
     for row in board[::-1]:
@@ -179,7 +201,6 @@ def minMax(player, board, depth, isMax):
     if depth == 0:
         return getMoves(player, board)
     if isMax:
-        # we need to validate it here
         maxValue = [0, 3]
 
         for i in range(0, 7):
@@ -202,7 +223,6 @@ def minMax(player, board, depth, isMax):
                 player, newBoard, depth - 1, True)
             if minValue[0] > value[0] and value[0] > 0:
                 minValue = value
-        print(minValue)
 
         i = 0
         while not validMove(minValue[1], board):
