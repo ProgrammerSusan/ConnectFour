@@ -39,7 +39,7 @@ def getMoves(player, board):
             moves.append(searchDiagLeftUp(player, board, 5, col))
             moves.append(searchDiagLeftDown(player, board, 5, col))
         else:
-            return [0, col]
+            return [-1, col]
     return getBestMove(moves)
 
 
@@ -195,7 +195,7 @@ def minMax(player, board, depth, isMax):
                 player, newBoard, depth - 1, True)
             # print("minValue ", minValue)
             # print("value ", value)
-            if minValue[0] > value[0]:
+            if minValue[0] > value[0] and value[0] >= 0:
                 minValue = value
         return minValue
 
