@@ -8,7 +8,7 @@ import socket
 def get_move(player, board):
     print("-----------------")
     value = minMax(player, board, 2, True)
-    print("REEEETURNNN" + value)
+    print("REEEETURNNN", value)
 
     return {"column": value[1]}
 
@@ -161,9 +161,9 @@ def searchDiagLeftDown(player, board, rowIndex, colIndex):
 
 def nextStateBoard(player, board, col, isMax):
     row = 0
-    while row < 5:
-        if board[row][col] == 0:
-            row += 1
+    while row < 5 and board[row + 1][col] == 0:
+        row += 1
+
     chip = player
     if not isMax:
         if player == 1:
@@ -179,23 +179,30 @@ def minMax(player, board, depth, isMax):
         print(getMoves(player, board))
         return getMoves(player, board)
     if isMax:
-        maxValue = 0
+        maxValue = [0, 3]
 
-        i = 0
+        i = 0  # do we need to incerment??  SHould we use a for loop?
         while i < 6:
+            print("in the max loop")
+            print(i)
             newBoard = nextStateBoard(player, board, i, isMax)
             value = minMax(
                 player, newBoard, depth - 1, False)
-            maxValue = max(maxValue, value[0])
+            # still not conviced that this is an array
+            if maxValue[0] < value[0]:
+                maxValue = value
+            i += 1
         return maxValue
     else:
-        minValue = 5
+        minValue = [5, 3]
         i = 0
         while i < 6:
             newBoard = nextStateBoard(player, board, i, isMax)
             value = minMax(
                 player, newBoard, depth - 1, True)
-            minValue = min(minValue, value[0])
+            if minValue[0] > value[0]:
+                minValue = value
+            i += 1
         return minValue
 
 
