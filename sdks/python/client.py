@@ -21,22 +21,25 @@ def validMove(column, board):
 def getMoves(player, board):
     moves = []
     for col in range(0, len(board[0])):
-        for row in range(0, 5):
-            if board[row][col] == 0 and board[row + 1][col] != 0:
-                moves.append(searchDiagRightUp(player, board, row, col))
-                moves.append(searchRight(player, board, row, col))
-                moves.append(searchLeft(player, board, row, col))
-                moves.append(searchDiagRightDown(player, board, row, col))
-                moves.append(searchDown(player, board, row, col))
-                moves.append(searchDiagLeftUp(player, board, row, col))
-                moves.append(searchDiagLeftDown(player, board, row, col))
-        moves.append(searchDiagRightUp(player, board, 5, col))
-        moves.append(searchRight(player, board, 5, col))
-        moves.append(searchLeft(player, board, 5, col))
-        moves.append(searchDiagRightDown(player, board, 5, col))
-        moves.append(searchDown(player, board, 5, col))
-        moves.append(searchDiagLeftUp(player, board, 5, col))
-        moves.append(searchDiagLeftDown(player, board, 5, col))
+        if validMove(col, board):
+            for row in range(0, 5):
+                if board[row][col] == 0 and board[row + 1][col] != 0:
+                    moves.append(searchDiagRightUp(player, board, row, col))
+                    moves.append(searchRight(player, board, row, col))
+                    moves.append(searchLeft(player, board, row, col))
+                    moves.append(searchDiagRightDown(player, board, row, col))
+                    moves.append(searchDown(player, board, row, col))
+                    moves.append(searchDiagLeftUp(player, board, row, col))
+                    moves.append(searchDiagLeftDown(player, board, row, col))
+            moves.append(searchDiagRightUp(player, board, 5, col))
+            moves.append(searchRight(player, board, 5, col))
+            moves.append(searchLeft(player, board, 5, col))
+            moves.append(searchDiagRightDown(player, board, 5, col))
+            moves.append(searchDown(player, board, 5, col))
+            moves.append(searchDiagLeftUp(player, board, 5, col))
+            moves.append(searchDiagLeftDown(player, board, 5, col))
+        else:
+            return [0, col]
     return getBestMove(moves)
 
 
@@ -58,8 +61,8 @@ def searchRight(player, board, rowIndex, colIndex):
             score += 1
             i += 1
         else:
-            return [score, colIndex]
-    return [score, colIndex]
+            return [scoreMove(score, colIndex), colIndex]
+    return [scoreMove(score, colIndex), colIndex]
 
 def searchLeft(player, board, rowIndex, colIndex):
     score = 1
@@ -69,8 +72,8 @@ def searchLeft(player, board, rowIndex, colIndex):
             score += 1
             i += 1
         else:
-            return [score, colIndex]
-    return [score, colIndex]
+            return [scoreMove(score, colIndex), colIndex]
+    return [scoreMove(score, colIndex), colIndex]
 
 
 def searchDown(player, board, rowIndex, colIndex):
@@ -81,8 +84,8 @@ def searchDown(player, board, rowIndex, colIndex):
             score += 1
             i += 1
         else:
-            return [score, colIndex]
-    return [score, colIndex]
+            return [scoreMove(score, colIndex), colIndex]
+    return [scoreMove(score, colIndex), colIndex]
 
 
 def searchDiagRightUp(player, board, rowIndex, colIndex):
@@ -94,8 +97,8 @@ def searchDiagRightUp(player, board, rowIndex, colIndex):
             score += 1
             i += 1
         else:
-            return [score, colIndex]
-    return [score, colIndex]
+            return [scoreMove(score, colIndex), colIndex]
+    return [scoreMove(score, colIndex), colIndex]
 
 
 def searchDiagRightDown(player, board, rowIndex, colIndex):
@@ -107,8 +110,8 @@ def searchDiagRightDown(player, board, rowIndex, colIndex):
             score += 1
             i += 1
         else:
-            return [score, colIndex]
-    return [score, colIndex]
+            return [scoreMove(score, colIndex), colIndex]
+    return [scoreMove(score, colIndex), colIndex]
 
 
 def searchDiagLeftUp(player, board, rowIndex, colIndex):
@@ -120,8 +123,8 @@ def searchDiagLeftUp(player, board, rowIndex, colIndex):
             score += 1
             i += 1
         else:
-            return [score, colIndex]
-    return [score, colIndex]
+            return [scoreMove(score, colIndex), colIndex]
+    return [scoreMove(score, colIndex), colIndex]
 
 
 def searchDiagLeftDown(player, board, rowIndex, colIndex):
@@ -133,9 +136,21 @@ def searchDiagLeftDown(player, board, rowIndex, colIndex):
             score += 1
             i += 1
         else:
-            return [score, colIndex]
-    return [score, colIndex]
+            return [scoreMove(score, colIndex), colIndex]
+    return [scoreMove(score, colIndex), colIndex]
 
+def scoreMove(score, colIndex):
+    if score == 3:
+        score *= 100
+    if score == 2:
+        score *= 15
+    if colIndex == 3:
+        score *= 10
+    if colIndex == 2 or colIndex == 4:
+        score *= 5
+    if colIndex == 1 or colIndex == 5:
+        score *= 2
+    return score
 
 def nextStateBoard(player, board, col, isMax):
     row = 0
