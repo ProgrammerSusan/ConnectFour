@@ -6,23 +6,32 @@ import socket
 
 
 def get_move(player, board):
-    print("-----------------")
+    #print("inital board", board)
+    # print(board[0][0])
     value = minMax(player, board, 2, True)
-    print("REEEETURNNN", value)
 
     return {"column": value[1]}
 
 
 def validMove(column, board):
+    #print("valid move column ", column)
     if board[0][column] != 0:
-        return 0
+        return False
+    else:
+        return True
 
 
 def getMoves(player, board):
     moves = []
-    for col in range(0, len(board[0])):
+    col = 0
+    while col < 7:
+        row = 0
+        #print("column getMoves ", col)
+        yes = validMove(col, board)
+        #print("Is the move valid? ", yes)
+        # print(True)
         if validMove(col, board):
-            for row in range(0, 5):
+            while row < 5:
                 if board[row][col] == 0 and board[row + 1][col] != 0:
                     moves.append(searchDiagRightUp(player, board, row, col))
                     moves.append(searchRight(player, board, row, col))
@@ -31,6 +40,8 @@ def getMoves(player, board):
                     moves.append(searchDown(player, board, row, col))
                     moves.append(searchDiagLeftUp(player, board, row, col))
                     moves.append(searchDiagLeftDown(player, board, row, col))
+                row += 1
+
             moves.append(searchDiagRightUp(player, board, 5, col))
             moves.append(searchRight(player, board, 5, col))
             moves.append(searchLeft(player, board, 5, col))
@@ -40,6 +51,7 @@ def getMoves(player, board):
             moves.append(searchDiagLeftDown(player, board, 5, col))
         else:
             return [-1, col]
+        col += 1
     return getBestMove(moves)
 
 
@@ -63,6 +75,7 @@ def searchRight(player, board, rowIndex, colIndex):
         else:
             return [scoreMove(score, colIndex), colIndex]
     return [scoreMove(score, colIndex), colIndex]
+
 
 def searchLeft(player, board, rowIndex, colIndex):
     score = 1
@@ -139,6 +152,7 @@ def searchDiagLeftDown(player, board, rowIndex, colIndex):
             return [scoreMove(score, colIndex), colIndex]
     return [scoreMove(score, colIndex), colIndex]
 
+
 def scoreMove(score, colIndex):
     if score == 3:
         score *= 100
@@ -152,10 +166,8 @@ def scoreMove(score, colIndex):
         score *= 2
     return score
 
+
 def nextStateBoard(player, board, col, isMax):
-    row = 0
-    while row < 5 and board[row + 1][col] == 0:
-        row += 1
 
     chip = player
     if not isMax:
@@ -163,40 +175,46 @@ def nextStateBoard(player, board, col, isMax):
             chip = 2
         else:
             chip = 1
-    board[row][col] = chip
+    print(chip)
+
+    #print("before", board)
+    for row in board[::-1]:
+        if row[col] == 0:
+            print(row)
+            row[col] = chip
+            return board
     return board
 
 
 def minMax(player, board, depth, isMax):
     if depth == 0:
-        print(getMoves(player, board))
-        print("depth", depth)
+        #print(getMoves(player, board))
+        #print("depth", depth)
+        #print("initial board", board)
         return getMoves(player, board)
     if isMax:
         maxValue = [0, 3]
 
-        for i in range(0,7):
-            print("in the max loop")
-            print(i)
-            print("depth max ", depth)
+        for i in range(0, 7):
             newBoard = nextStateBoard(player, board, i, isMax)
+            print("newboard ", newBoard)
             value = minMax(
                 player, newBoard, depth, False)
-            # still not conviced that this is an array
             if maxValue[0] < value[0]:
                 maxValue = value
+
+        #print("maxValue ", maxValue)
         return maxValue
     else:
-        minValue = [5, 3]
+        minValue = [1000000, 3]
         for i in range(0, 7):
-            print("depthmin ", depth)
+            #print("depthmin ", depth)
             newBoard = nextStateBoard(player, board, i, isMax)
             value = minMax(
                 player, newBoard, depth - 1, True)
-            # print("minValue ", minValue)
-            # print("value ", value)
-            if minValue[0] > value[0] and value[0] >= 0:
+            if minValue[0] > value[0] and value[0] > 0:
                 minValue = value
+        #print("minValue ", minValue)
         return minValue
 
 
