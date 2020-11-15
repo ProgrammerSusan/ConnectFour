@@ -149,9 +149,9 @@ def scoreMove(score, colIndex):
     if score == 2:
         score *= 15
     if colIndex == 3:
-        score *= 10
-    if colIndex == 2 or colIndex == 4:
         score *= 5
+    if colIndex == 2 or colIndex == 4:
+        score *= 3
     if colIndex == 1 or colIndex == 5:
         score *= 2
     return score
@@ -170,7 +170,6 @@ def nextStateBoard(player, board, col, isMax):
     board = copy.deepcopy(board)
     for row in board[::-1]:
         if row[col] == 0:
-            print(row)
             row[col] = chip
             return board
     return board
@@ -180,24 +179,35 @@ def minMax(player, board, depth, isMax):
     if depth == 0:
         return getMoves(player, board)
     if isMax:
+        # we need to validate it here
         maxValue = [0, 3]
 
         for i in range(0, 7):
             newBoard = nextStateBoard(player, board, i, isMax)
-            print("newboard ", newBoard)
             value = minMax(
                 player, newBoard, depth, False)
             if maxValue[0] < value[0]:
                 maxValue = value
+
+        i = 0
+        while not validMove(maxValue[1], board):
+            maxValue[1] = i
+            i += 1
         return maxValue
     else:
-        minValue = [1000000, 3]
+        minValue = [float("inf"), 3]
         for i in range(0, 7):
             newBoard = nextStateBoard(player, board, i, isMax)
             value = minMax(
                 player, newBoard, depth - 1, True)
             if minValue[0] > value[0] and value[0] > 0:
                 minValue = value
+        print(minValue)
+
+        i = 0
+        while not validMove(minValue[1], board):
+            minValue[1] = i
+            i += 1
         return minValue
 
 
