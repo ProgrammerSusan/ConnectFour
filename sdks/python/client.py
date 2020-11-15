@@ -7,15 +7,12 @@ import copy
 
 
 def get_move(player, board):
-    #print("inital board", board)
-    # print(board[0][0])
     value = minMax(player, board, 2, True)
 
     return {"column": value[1]}
 
 
 def validMove(column, board):
-    #print("valid move column ", column)
     if board[0][column] != 0:
         return False
     else:
@@ -27,10 +24,6 @@ def getMoves(player, board):
     col = 0
     while col < 7:
         row = 0
-        #print("column getMoves ", col)
-        yes = validMove(col, board)
-        #print("Is the move valid? ", yes)
-        # print(True)
         if validMove(col, board):
             while row < 5:
                 if board[row][col] == 0 and board[row + 1][col] != 0:
@@ -103,7 +96,6 @@ def searchDown(player, board, rowIndex, colIndex):
 
 
 def searchDiagRightUp(player, board, rowIndex, colIndex):
-    # Subtract Rows and add Col
     score = 1
     i = 1
     while i < 4 and (rowIndex - i >= 0 and colIndex + i < 7):
@@ -116,7 +108,6 @@ def searchDiagRightUp(player, board, rowIndex, colIndex):
 
 
 def searchDiagRightDown(player, board, rowIndex, colIndex):
-    # Add Rows and add Col
     score = 1
     i = 1
     while i < 4 and (rowIndex + i < 6 and colIndex + i < 7):
@@ -129,7 +120,6 @@ def searchDiagRightDown(player, board, rowIndex, colIndex):
 
 
 def searchDiagLeftUp(player, board, rowIndex, colIndex):
-    # Subtract Rows and subtract Col
     score = 1
     i = 1
     while i < 4 and (rowIndex - i >= 0 and colIndex - i >= 0):
@@ -142,7 +132,6 @@ def searchDiagLeftUp(player, board, rowIndex, colIndex):
 
 
 def searchDiagLeftDown(player, board, rowIndex, colIndex):
-    # Add Rows and add Col
     score = 1
     i = 1
     while i < 4 and (rowIndex + i < 6 and colIndex - i >= 0):
@@ -178,7 +167,6 @@ def nextStateBoard(player, board, col, isMax):
             chip = 1
     print(chip)
 
-    #print("before", board)
     board = copy.deepcopy(board)
     for row in board[::-1]:
         if row[col] == 0:
@@ -190,35 +178,26 @@ def nextStateBoard(player, board, col, isMax):
 
 def minMax(player, board, depth, isMax):
     if depth == 0:
-        #print(getMoves(player, board))
-        #print("depth", depth)
-        #print("initial board", board)
         return getMoves(player, board)
     if isMax:
         maxValue = [0, 3]
 
         for i in range(0, 7):
-            #newBoard = copy.deepcopy(board)
             newBoard = nextStateBoard(player, board, i, isMax)
             print("newboard ", newBoard)
             value = minMax(
                 player, newBoard, depth, False)
             if maxValue[0] < value[0]:
                 maxValue = value
-
-        #print("maxValue ", maxValue)
         return maxValue
     else:
         minValue = [1000000, 3]
         for i in range(0, 7):
-            #print("depthmin ", depth)
-            #newBoard = copy.deepcopy(board)
             newBoard = nextStateBoard(player, board, i, isMax)
             value = minMax(
                 player, newBoard, depth - 1, True)
             if minValue[0] > value[0] and value[0] > 0:
                 minValue = value
-        #print("minValue ", minValue)
         return minValue
 
 
