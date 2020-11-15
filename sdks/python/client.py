@@ -6,9 +6,11 @@ import socket
 
 
 def get_move(player, board):
-    # TODO determine valid moves
-    # TODO determine best move
-    return {"column": 1}
+    print("-----------------")
+    value = minMax(player, board, 2, True)
+    print("REEEETURNNN" + value)
+
+    return {"column": value[1]}
 
 
 def validMove(column, board):
@@ -16,47 +18,43 @@ def validMove(column, board):
         return 0
 
 
-def prepare_response(move):
-    response = '{}\n'.format(json.dumps(move))
-    print('sending {!r}'.format(response))
-    return response
-
-
-if __name__ == "__main__":
-    port = int(sys.argv[1]) if (len(sys.argv) > 1 and sys.argv[1]) else 1337
-    host = sys.argv[2] if (
-        len(sys.argv) > 2 and sys.argv[2]) else socket.gethostname()
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        sock.connect((host, port))
-        while True:
-            data = sock.recv(1024)
-            if not data:
-                print('connection to server closed')
-                break
-            json_data = json.loads(str(data.decode('UTF-8')))
-            board = json_data['board']
-            maxTurnTime = json_data['maxTurnTime']
-            player = json_data['player']
-            print(player, maxTurnTime, board)
-
-            move = get_move(player, board)
-            response = prepare_response(move)
-            sock.sendall(response)
-    finally:
-        sock.close()
-
-
-def getBestMove(player, board):
+def getMoves(player, board):
     rowIndex = 6
     colIndex = 0
+    moves = []
     for row in board[::-1]:
         rowIndex -= 1
         for col in row:
             if col == player:
-                col += 1
-    return
+                if colIndex < 4 and rowIndex > 2:
+                    moves.append(searchDiagRightUp(
+                        player, board, rowIndex, colIndex))
+                if colIndex < 4:
+                    moves.append(searchRight(
+                        player, board, rowIndex, colIndex))
+                if colIndex <= 3 and rowIndex < 4:
+                    moves.append(searchDiagRightDown(
+                        player, board, rowIndex, colIndex))
+                if rowIndex > 2:
+                    moves.append(searchUp(
+                        player, board, rowIndex, colIndex))
+                if colIndex > 2:
+                    moves.append(searchDiagLeftUp(
+                        player, board, rowIndex, colIndex))
+                if colIndex > 2 and rowIndex < 4:
+                    moves.append(searchDiagLeftDown(
+                        player, board, rowIndex, colIndex))
+    return getBestMove(moves)
+
+
+def getBestMove(moves):
+    max = 0
+    bestMove = []
+    for score, col in moves:
+        if score > max:
+            max = score
+            bestMove = [score, col]
+    return bestMove
 
 
 def searchRight(player, board, rowIndex, colIndex):
@@ -148,3 +146,79 @@ def searchDiagLeftDown(player, board, rowIndex, colIndex):
                 return [score, colIndex]
             if board[rowIndex - score][colIndex - score] != player:
                 return [score, -1]
+
+
+def nextStateBoard(player, board, col, isMax):
+    row = 0
+    while row < 6:
+        if board[row][col] == 0:
+            row += 1
+    chip = player
+    if not isMax:
+        if player == 1:
+            chip = 2
+        else:
+            chip = 1
+    print(row)
+    print(col)
+    print(board[6][0])
+    board[row][col] = chip
+    return board
+
+
+def minMax(player, board, depth, isMax):
+    print("hi")
+    if depth == 0:
+        print(getMoves(player, board))
+        return getMoves(player, board)
+    if isMax:
+        maxValue = 0
+
+        i = 0
+        while i < 7:
+            newBoard = nextStateBoard(player, board, i, isMax)
+            value = minMax(
+                player, newBoard, depth - 1, False)
+            maxValue = max(maxValue, value[0])
+        return maxValue
+    else:
+        minValue = 5
+        i = 0
+        while i < 7:
+            newBoard = nextStateBoard(player, board, i, isMax)
+            value = minMax(
+                player, newBoard, depth - 1, True)
+            minValue = min(minValue, value[0])
+        return minValue
+
+
+def prepare_response(move):
+    response = '{}\n'.format(json.dumps(move))
+    print('sending {!r}'.format(response))
+    return response
+
+
+if __name__ == "__main__":
+    port = int(sys.argv[1]) if (len(sys.argv) > 1 and sys.argv[1]) else 1337
+    host = sys.argv[2] if (
+        len(sys.argv) > 2 and sys.argv[2]) else socket.gethostname()
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        sock.connect((host, port))
+        while True:
+            data = sock.recv(1024)
+            if not data:
+                print('connection to server closed')
+                break
+            json_data = json.loads(str(data.decode('UTF-8')))
+            board = json_data['board']
+            maxTurnTime = json_data['maxTurnTime']
+            player = json_data['player']
+            print(player, maxTurnTime, board)
+
+            move = get_move(player, board)
+            response = prepare_response(move)
+            sock.sendall(response)
+    finally:
+        sock.close()
