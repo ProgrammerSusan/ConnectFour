@@ -67,7 +67,7 @@ def searchRight(player, board, rowIndex, colIndex):
         if board[rowIndex][colIndex + i] == player:
             score += 1
             i += 1
-        else if board[rowIndex][colIndex + i] != 0:
+        elif board[rowIndex][colIndex + i] != 0:
             enemyScore += 1
             i +=1
         else:
@@ -83,7 +83,7 @@ def searchLeft(player, board, rowIndex, colIndex):
         if board[rowIndex][colIndex - i] == player:
             score += 1
             i += 1
-        else if board[rowIndex][colIndex - i] != 0:
+        elif board[rowIndex][colIndex - i] != 0:
             enemyScore += 1
             i +=1
         else:
@@ -99,7 +99,7 @@ def searchDown(player, board, rowIndex, colIndex):
         if board[rowIndex + i][colIndex] == player:
             score += 1
             i += 1
-        else if board[rowIndex + i][colIndex] != 0:
+        elif board[rowIndex + i][colIndex] != 0:
             enemyScore += 1
             i +=1
         else:
@@ -115,7 +115,7 @@ def searchDiagRightUp(player, board, rowIndex, colIndex):
         if board[rowIndex - i][colIndex + i] == player:
             score += 1
             i += 1
-        else if board[rowIndex - i][colIndex + i] != 0:
+        elif board[rowIndex - i][colIndex + i] != 0:
             enemyScore += 1
             i +=1
         else:
@@ -131,7 +131,7 @@ def searchDiagRightDown(player, board, rowIndex, colIndex):
         if board[rowIndex + i][colIndex + i] == player:
             score += 1
             i += 1
-        else if board[rowIndex + i][colIndex + i] != 0:
+        elif board[rowIndex + i][colIndex + i] != 0:
             enemyScore += 1
             i +=1
         else:
@@ -147,7 +147,7 @@ def searchDiagLeftUp(player, board, rowIndex, colIndex):
         if board[rowIndex - i][colIndex - i] == player:
             score += 1
             i += 1
-        else if board[rowIndex - i][colIndex - i] != 0:
+        elif board[rowIndex - i][colIndex - i] != 0:
             enemyScore += 1
             i +=1
         else:
@@ -163,7 +163,7 @@ def searchDiagLeftDown(player, board, rowIndex, colIndex):
         if board[rowIndex + i][colIndex - i] == player:
             score += 1
             i += 1
-        else if board[rowIndex + i][colIndex - i] != 0:
+        elif board[rowIndex + i][colIndex - i] != 0:
             enemyScore += 1
             i +=1
         else:
