@@ -3,6 +3,7 @@
 import sys
 import json
 import socket
+import copy
 
 
 def get_move(player, board):
@@ -178,6 +179,7 @@ def nextStateBoard(player, board, col, isMax):
     print(chip)
 
     #print("before", board)
+    board = copy.deepcopy(board)
     for row in board[::-1]:
         if row[col] == 0:
             print(row)
@@ -196,6 +198,7 @@ def minMax(player, board, depth, isMax):
         maxValue = [0, 3]
 
         for i in range(0, 7):
+            #newBoard = copy.deepcopy(board)
             newBoard = nextStateBoard(player, board, i, isMax)
             print("newboard ", newBoard)
             value = minMax(
@@ -209,6 +212,7 @@ def minMax(player, board, depth, isMax):
         minValue = [1000000, 3]
         for i in range(0, 7):
             #print("depthmin ", depth)
+            #newBoard = copy.deepcopy(board)
             newBoard = nextStateBoard(player, board, i, isMax)
             value = minMax(
                 player, newBoard, depth - 1, True)
