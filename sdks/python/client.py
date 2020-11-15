@@ -69,7 +69,7 @@ def searchRight(player, board, rowIndex, colIndex):
             i += 1
         elif board[rowIndex][colIndex + i] != 0:
             enemyScore += 1
-            i +=1
+            i += 1
         else:
             return [scoreMove(score, enemyScore, colIndex), colIndex]
     return [scoreMove(score, enemyScore, colIndex), colIndex]
@@ -85,7 +85,7 @@ def searchLeft(player, board, rowIndex, colIndex):
             i += 1
         elif board[rowIndex][colIndex - i] != 0:
             enemyScore += 1
-            i +=1
+            i += 1
         else:
             return [scoreMove(score, enemyScore, colIndex), colIndex]
     return [scoreMove(score, enemyScore, colIndex), colIndex]
@@ -101,7 +101,7 @@ def searchDown(player, board, rowIndex, colIndex):
             i += 1
         elif board[rowIndex + i][colIndex] != 0:
             enemyScore += 1
-            i +=1
+            i += 1
         else:
             return [scoreMove(score, enemyScore, colIndex), colIndex]
     return [scoreMove(score, enemyScore, colIndex), colIndex]
@@ -117,7 +117,7 @@ def searchDiagRightUp(player, board, rowIndex, colIndex):
             i += 1
         elif board[rowIndex - i][colIndex + i] != 0:
             enemyScore += 1
-            i +=1
+            i += 1
         else:
             return [scoreMove(score, enemyScore, colIndex), colIndex]
     return [scoreMove(score, enemyScore, colIndex), colIndex]
@@ -133,7 +133,7 @@ def searchDiagRightDown(player, board, rowIndex, colIndex):
             i += 1
         elif board[rowIndex + i][colIndex + i] != 0:
             enemyScore += 1
-            i +=1
+            i += 1
         else:
             return [scoreMove(score, enemyScore, colIndex), colIndex]
     return [scoreMove(score, enemyScore, colIndex), colIndex]
@@ -149,7 +149,7 @@ def searchDiagLeftUp(player, board, rowIndex, colIndex):
             i += 1
         elif board[rowIndex - i][colIndex - i] != 0:
             enemyScore += 1
-            i +=1
+            i += 1
         else:
             return [scoreMove(score, enemyScore, colIndex), colIndex]
     return [scoreMove(score, enemyScore, colIndex), colIndex]
@@ -165,13 +165,15 @@ def searchDiagLeftDown(player, board, rowIndex, colIndex):
             i += 1
         elif board[rowIndex + i][colIndex - i] != 0:
             enemyScore += 1
-            i +=1
+            i += 1
         else:
-            return  [scoreMove(score, enemyScore, colIndex), colIndex]
+            return [scoreMove(score, enemyScore, colIndex), colIndex]
     return [scoreMove(score, enemyScore, colIndex), colIndex]
 
 
 def scoreMove(score, enemyScore, colIndex):
+    if enemyScore != 3:
+        score -= enemyScore
     if score == 3:
         score *= 100
     if score == 2:
