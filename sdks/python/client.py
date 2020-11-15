@@ -19,31 +19,40 @@ def validMove(column, board):
 
 
 def getMoves(player, board):
-    rowIndex = 6
+    rowIndex = 5
     colIndex = 0
+    print(player)
     moves = []
     for row in board[::-1]:
         rowIndex -= 1
         for col in row:
             if col == player:
-                if colIndex < 4 and rowIndex > 2:
+                if colIndex < 4 and rowIndex > 1:
+                    print("ru")
                     moves.append(searchDiagRightUp(
                         player, board, rowIndex, colIndex))
                 if colIndex < 4:
+                    print("r")
                     moves.append(searchRight(
                         player, board, rowIndex, colIndex))
-                if colIndex <= 3 and rowIndex < 4:
+                if colIndex <= 3 and rowIndex < 3:
+                    print("rd")
                     moves.append(searchDiagRightDown(
                         player, board, rowIndex, colIndex))
-                if rowIndex > 2:
+                if rowIndex > 1:
+                    print("u")
                     moves.append(searchUp(
                         player, board, rowIndex, colIndex))
                 if colIndex > 2:
+                    print("lu")
                     moves.append(searchDiagLeftUp(
                         player, board, rowIndex, colIndex))
-                if colIndex > 2 and rowIndex < 4:
+                if colIndex > 2 and rowIndex < 3:
+                    print("ld")
                     moves.append(searchDiagLeftDown(
                         player, board, rowIndex, colIndex))
+        if len(moves) == 0:
+            return [0, 3]
     return getBestMove(moves)
 
 
@@ -89,6 +98,8 @@ def searchDiagRightUp(player, board, rowIndex, colIndex):
     score = 1
     i = 1
     while i < 4:
+        print("score")
+        print(score)
         if board[rowIndex - i][colIndex + i] == player:
             score += 1
             i += 1
@@ -150,7 +161,7 @@ def searchDiagLeftDown(player, board, rowIndex, colIndex):
 
 def nextStateBoard(player, board, col, isMax):
     row = 0
-    while row < 6:
+    while row < 5:
         if board[row][col] == 0:
             row += 1
     chip = player
@@ -159,15 +170,11 @@ def nextStateBoard(player, board, col, isMax):
             chip = 2
         else:
             chip = 1
-    print(row)
-    print(col)
-    print(board[6][0])
     board[row][col] = chip
     return board
 
 
 def minMax(player, board, depth, isMax):
-    print("hi")
     if depth == 0:
         print(getMoves(player, board))
         return getMoves(player, board)
@@ -175,7 +182,7 @@ def minMax(player, board, depth, isMax):
         maxValue = 0
 
         i = 0
-        while i < 7:
+        while i < 6:
             newBoard = nextStateBoard(player, board, i, isMax)
             value = minMax(
                 player, newBoard, depth - 1, False)
@@ -184,7 +191,7 @@ def minMax(player, board, depth, isMax):
     else:
         minValue = 5
         i = 0
-        while i < 7:
+        while i < 6:
             newBoard = nextStateBoard(player, board, i, isMax)
             value = minMax(
                 player, newBoard, depth - 1, True)
